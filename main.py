@@ -2,58 +2,54 @@ import os
 import argparse
 
 ping_const = "ping -c 1 -w 1 "
-parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py --a=192.168.1 --s=0 --ra=255')
-parser.add_argument("--a")
-parser.add_argument("--s")
-parser.add_argument("--ra")
-parser.add_argument("--nmap")
+parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a=192.168.1 -s=0 -ra=255')
+parser.add_argument('-a', '--adress_zone',
+                        dest='a',
+                        help='Enter the address without the last octet and period',
+                        default="192.168.1",
+                        type=str)
+parser.add_argument('-s', '--start_address',
+                        dest='s',
+                        help='Enter the address you want to start scanning',
+                        default=0,
+                        type=int)
+parser.add_argument('-ra', '--range',
+                        dest='ra',
+                        help='Enter the last address to be scanned ',
+                        default=3,
+                        type=int)
+
+#T#ODO
+#nmap scanning and print mac address and ports
+#sudo nmap 192.168.1.85 | grep "MAC Address:" | grep -oE '([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)'
+#sudo nmap 192.168.1.85 | grep open
+#and flag interface
 args = parser.parse_args()
 a = args.a
 s = args.s
 ra = args.ra
 
-if a == None:
-    a = "192.168.1"
-else:
-    g = 0
-
-if ra == None:
+if (0 < ra < 255): 
+    r = ra
+elif ra == 255:
     r = 255
-elif ra != None:
-    ra = int(ra)
-    if (0 < ra < 255): 
-        r = ra
-    elif ra == 255:
-        r = 255
-    else:
-        print("Incorrect data")
-        r = 255
 else:
     print("Incorrect data")
     r = 255
 
-if s == None:
-    i = 0   
+if (0 < s < 255): 
+    i = s
+    oktet = s
+elif s == 0:
+    i = 0
     oktet = 0
-elif s != None:
-    s = int(s)
-    if (0 < s < 255): 
-        i = s
-        oktet = s
-    elif s == 0:
-        i = 0
-        oktet = 0
-    else:
-        print("Incorrect data")
-        i = 0
-        oktet = 0
 else:
     print("Incorrect data")
     i = 0
     oktet = 0
 
-r = int(r)
 
+r = int(r)
 while i < r:
     oktet = str(oktet)
     a = str(a)
