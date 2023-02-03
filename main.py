@@ -3,27 +3,44 @@ import argparse
 
 ping_const = "ping -c 1 -w 1 "
 parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a=192.168.1 -s=0 -ra=255')
+
 parser.add_argument('-a', '--adress_zone',
                         dest='a',
                         help='Enter the address without the last octet and period',
                         default="192.168.1",
                         type=str)
+
 parser.add_argument('-s', '--start_address',
                         dest='s',
                         help='Enter the address you want to start scanning',
                         default=0,
                         type=int)
+
 parser.add_argument('-ra', '--range',
                         dest='ra',
                         help='Enter the last address to be scanned ',
                         default=3,
                         type=int)
 
+parser.add_argument('-inter', '--interface',
+                        dest='inter',
+                        help='Optionally, enter the interface from which you want to scan ',
+                        default=None,
+                        type=int)
+
+parser.add_argument('-ports', '--ports',
+                        dest='ports',
+                        help='Optionally, if you want the mac address of all detected devices to be displayed',
+                        default=None,
+                        type=int)
+
+
 #T#ODO
 #nmap scanning and print mac address and ports
 #sudo nmap 192.168.1.85 | grep "MAC Address:" | grep -oE '([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)'
 #sudo nmap 192.168.1.85 | grep open
 #and flag interface
+
 args = parser.parse_args()
 a = args.a
 s = args.s
