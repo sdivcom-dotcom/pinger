@@ -3,6 +3,8 @@ import subprocess
 import argparse
 import socket
 
+version_programm = "0.2"
+
 def get_network_interfaces():
     interfaces = []
     for interface in socket.if_nameindex():
@@ -11,13 +13,14 @@ def get_network_interfaces():
     return interfaces
 
 network_interfaces = get_network_interfaces()
-print(network_interfaces)
+network_interfaces = str(network_interfaces)
+print("network interfaces = " + network_interfaces)
 
 ping_const = "ping -c 1 -w 1 "
-parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a=192.168.1 -s=0 -ra=255')
+parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a=192.168.1 -s=0 -ra=255 ' + network_interfaces)
 nmap = 'sudo nmap '
 mac_parser =' | grep "MAC Address:" | grep -oE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)"'
-
+inter_flag =' -I '
 parser.add_argument('-a', '--adress_zone',
                         dest='a',
                         help='Enter the address without the last octet and period',
@@ -38,9 +41,15 @@ parser.add_argument('-ra', '--range',
 
 parser.add_argument('-inter', '--interface',
                         dest='inter',
-                        help='Optionally, enter the interface from which you want to scan' + network_interfaces,
+                        help='Optionally, if you want the scan to be on the specified interface only, specify 1 ' + network_interfaces,
                         default=0,
                         type=int)
+
+parser.add_argument('-inter_name', '--interface_name',
+                        dest='inter_name',
+                        help='Optionally, enter the interface from which you want to scan ' + network_interfaces,
+                        default='lo',
+                        type=str)
 
 parser.add_argument('-mac', '--mac',
                         dest='mac',
@@ -60,6 +69,11 @@ parser.add_argument('-breaks', '--breaks',
                         default=0,
                         type=int)
 
+parser.add_argument('-v', '--version',
+                        dest='version',
+                        help='Version programm',
+                        default=0,
+                        type=int)
 
 #T#ODO
 #nmap scanning and print mac address and ports
@@ -72,10 +86,11 @@ a = args.a
 s = args.s
 ra = args.ra
 inter = args.inter
+inter_name = args.inter_name
 mac = args.mac
 ports = args.ports
 breaks = args.breaks
-
+version = args.version
 
 if (0 < ra < 255): 
     r = ra
@@ -95,6 +110,17 @@ else:
     print("Incorrect data")
     i = 0
     oktet = 0
+
+if inter == 1:
+    ping_const = str(ping_const)
+    ping = ping_const + inter_flag + inter_name
+elif inter == 0:
+    ping_const = str(ping_const)
+    ping = ping_const
+else:
+    print("Incorrect data")
+    ping_const = str(ping_const)
+    ping = ping_const
 
 if mac == 1:
     mac_const = 1
@@ -120,29 +146,35 @@ else:
     print("Incorrect data")
     breaks_const = 0
 
+if version == 1:
+    print("verion programm: " + version_programm)
+else:
+    g = 0
 
 r = int(r)
 while i < r:
     oktet = str(oktet)
     a = str(a)
-    ping_const = str(ping_const)
     hostname = a + "." + oktet
     oktet = int(oktet)
-    response = os.system(ping_const + hostname + " 1>/dev/null")
+    response = os.system(ping + " " + hostname + " 1>/dev/null")
     if response == 0:
         print(hostname, 'is up!')
+
         if mac_const == 1:
             command1 = nmap + hostname + mac_parser
             response1 = subprocess.check_output(command1, shell=True)
             print(response1)
         else:
             g = 0
+
         if ports_const == 1:
             command2 = nmap + hostname
             response2 = subprocess.check_output(command2, shell=True)
             print(response2)
         else:
             g = 0
+
         if breaks_const == 1:
             break
         else:
