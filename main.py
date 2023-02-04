@@ -150,7 +150,7 @@ if version == 1:
     print("verion programm: " + version_programm)
     r = 0
 else:
-    g = 0
+    pass
 
 r = int(r)
 while i < r:
@@ -167,21 +167,21 @@ while i < r:
             response1 = subprocess.check_output(command1, shell=True)
             print(response1)
         else:
-            g = 0
+            pass
 
         if ports_const == 1:
             command2 = nmap + hostname
             response2 = subprocess.check_output(command2, shell=True)
             print(response2)
         else:
-            g = 0
+            pass
 
         if breaks_const == 1:
             break
         else:
-            g = 0
+            pass
     
     else:
-        g = 0
+        pass
     i = i + 1
     oktet = oktet + 1
