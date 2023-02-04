@@ -22,13 +22,13 @@ parser.add_argument('-s', '--start_address',
 parser.add_argument('-ra', '--range',
                         dest='ra',
                         help='Enter the last address to be scanned ',
-                        default=12,
+                        default=3,
                         type=int)
 
 parser.add_argument('-inter', '--interface',
                         dest='inter',
                         help='Optionally, enter the interface from which you want to scan ',
-                        default=None,
+                        default=0,
                         type=int)
 
 parser.add_argument('-mac', '--mac',
@@ -60,7 +60,11 @@ args = parser.parse_args()
 a = args.a
 s = args.s
 ra = args.ra
+inter = args.inter
 mac = args.mac
+ports = args.ports
+breaks = args.breaks
+
 
 if (0 < ra < 255): 
     r = ra
@@ -132,9 +136,7 @@ while i < r:
             break
         else:
             g = 0
-        
-
-        #break
+    
     else:
         g = 0
     i = i + 1
