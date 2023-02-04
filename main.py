@@ -1,8 +1,11 @@
 import os
+import subprocess
 import argparse
 
 ping_const = "ping -c 1 -w 1 "
 parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a=192.168.1 -s=0 -ra=255')
+nmap = 'sudo nmap '
+mac_parser =' | grep "MAC Address:" | grep -oE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)"'
 
 parser.add_argument('-a', '--adress_zone',
                         dest='a',
@@ -19,7 +22,7 @@ parser.add_argument('-s', '--start_address',
 parser.add_argument('-ra', '--range',
                         dest='ra',
                         help='Enter the last address to be scanned ',
-                        default=3,
+                        default=12,
                         type=int)
 
 parser.add_argument('-inter', '--interface',
@@ -31,15 +34,20 @@ parser.add_argument('-inter', '--interface',
 parser.add_argument('-mac', '--mac',
                         dest='mac',
                         help='Optionally, if you want the mac address of all detected devices to be displayed',
-                        default=None,
+                        default=0,
                         type=int)
 
 parser.add_argument('-ports', '--ports',
                         dest='ports',
                         help='Optionally, displays all open ports of the found devices',
-                        default=None,
+                        default=0,
                         type=int)
 
+parser.add_argument('-breaks', '--breaks',
+                        dest='breaks',
+                        help='Optionally, as soon as you want to stop at the first address you see',
+                        default=0,
+                        type=int)
 
 
 #T#ODO
@@ -52,6 +60,7 @@ args = parser.parse_args()
 a = args.a
 s = args.s
 ra = args.ra
+mac = args.mac
 
 if (0 < ra < 255): 
     r = ra
@@ -72,6 +81,30 @@ else:
     i = 0
     oktet = 0
 
+if mac == 1:
+    mac_const = 1
+elif mac == 0:
+    mac_const = 0
+else:
+    print("Incorrect data")
+    mac_const = 0
+
+if ports == 1:
+    ports_const = 1
+elif ports == 0:
+    ports_const = 0
+else:
+    print("Incorrect data")
+    ports_const = 0
+
+if breaks == 1:
+    breaks_const = 1
+elif breaks == 0:
+    breaks_const = 0
+else:
+    print("Incorrect data")
+    breaks_const = 0
+
 
 r = int(r)
 while i < r:
@@ -83,7 +116,24 @@ while i < r:
     response = os.system(ping_const + hostname + " 1>/dev/null")
     if response == 0:
         print(hostname, 'is up!')
-        if 
+        if mac_const == 1:
+            command1 = nmap + hostname + mac_parser
+            response1 = subprocess.check_output(command1, shell=True)
+            print(response1)
+        else:
+            g = 0
+        if ports_const == 1:
+            command2 = nmap + hostname
+            response2 = subprocess.check_output(command2, shell=True)
+            print(response2)
+        else:
+            g = 0
+        if breaks_const == 1:
+            break
+        else:
+            g = 0
+        
+
         #break
     else:
         g = 0
