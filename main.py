@@ -36,7 +36,7 @@ parser.add_argument('-s', '--start_address',
 parser.add_argument('-ra', '--range',
                         dest='ra',
                         help='Enter the last address to be scanned ',
-                        default=3,
+                        default=100,
                         type=int)
 
 parser.add_argument('-inter', '--interface',
@@ -75,11 +75,6 @@ parser.add_argument('-v', '--version',
                         default=0,
                         type=int)
 
-#T#ODO
-#nmap scanning and print mac address and ports
-#sudo nmap 192.168.1.85 | grep "MAC Address:" | grep -oE '([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)'
-#sudo nmap 192.168.1.85 | grep open
-#and flag interface
 
 args = parser.parse_args()
 a = args.a
@@ -152,6 +147,15 @@ if version == 1:
 else:
     pass
 
+def get_mac_address(ip_address):
+    cmd = f"arp -n {ip_address}"
+    output = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    lines = output.split("\n")
+    for line in lines:
+        if ip_address in line:
+            mac_address = line.split()[2]
+            return mac_address
+
 r = int(r)
 while i < r:
     oktet = str(oktet)
@@ -163,9 +167,12 @@ while i < r:
         print(hostname, 'is up!')
 
         if mac_const == 1:
-            command1 = nmap + hostname + mac_parser
-            response1 = subprocess.check_output(command1, shell=True)
-            print(response1)
+            # command1 = nmap + hostname + mac_parser
+            # response1 = subprocess.check_output(command1, shell=True)
+            # print(response1)
+            response1 = get_mac_address(hostname)
+            print("MAC address: " + response1)
+
         else:
             pass
 
