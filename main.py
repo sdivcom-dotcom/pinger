@@ -148,6 +148,7 @@ else:
 
 if version == 1:
     print("verion programm: " + version_programm)
+    r = 0
 else:
     g = 0
 
