@@ -17,7 +17,7 @@ network_interfaces = str(network_interfaces)
 print("network interfaces = " + network_interfaces)
 
 ping_const = "ping -c 1 -w 1 "
-parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a=192.168.1 -s=0 -ra=255 ' + network_interfaces)
+parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a 192.168.1 -s 0 -ra 255 ' + network_interfaces)
 nmap = 'sudo nmap '
 mac_parser =' | grep "MAC Address:" | grep -oE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)"'
 inter_flag =' -I '
@@ -59,7 +59,7 @@ parser.add_argument('-mac', '--mac',
 
 parser.add_argument('-ports', '--ports',
                         dest='ports',
-                        help='Optionally, displays all open ports of the found devices',
+                        help='Optionally, displays all open ports of the found devices IMPORTANT!!! For now to run this function you need to run through sudo',
                         default=0,
                         type=int)
 

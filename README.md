@@ -2,7 +2,16 @@
 
 *A python script for pinging your assigned zone:*
 
- - sudo python3 main.py -h
+ - sudo python3 main.py 
+ - -a 192.168.1 
+ - -s 0 
+ - -ra 255 
+ - -inter 1 
+ - -inter_name "network interface" 
+ - -mac 1 
+ - -ports 1 
+ - -breaks 1 
+ - -v 1
    
    network interfaces = ['lo', 'enp0s25', 'wlp3s0']
    
@@ -10,7 +19,7 @@
    [-inter_name INTER_NAME] [-mac MAC] [-ports PORTS] [-breaks BREAKS]
    [-v VERSION]
  - Write ip addders without the last octet - example python3 main.py
-   -a=192.168.1 -s=0 -ra=255 ['lo', 'enp0s25', 'wlp3s0']
+   -a 192.168.1 -s 0 -ra 255 ['lo', 'enp0s25', 'wlp3s0']
 
 options:
 
@@ -40,6 +49,7 @@ options:
    *-ports PORTS, --ports PORTS*
    
    Optionally, displays all open ports of the found devices
+   IMPORTANT!!! For now to run this function you need to run through sudo
    
    *-breaks BREAKS, --breaks BREAKS*
    
