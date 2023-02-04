@@ -1,6 +1,17 @@
 import os
 import subprocess
 import argparse
+import socket
+
+def get_network_interfaces():
+    interfaces = []
+    for interface in socket.if_nameindex():
+        interface_name = interface[1]
+        interfaces.append(interface_name)
+    return interfaces
+
+network_interfaces = get_network_interfaces()
+print(network_interfaces)
 
 ping_const = "ping -c 1 -w 1 "
 parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a=192.168.1 -s=0 -ra=255')
@@ -27,7 +38,7 @@ parser.add_argument('-ra', '--range',
 
 parser.add_argument('-inter', '--interface',
                         dest='inter',
-                        help='Optionally, enter the interface from which you want to scan ',
+                        help='Optionally, enter the interface from which you want to scan' + network_interfaces,
                         default=0,
                         type=int)
 
