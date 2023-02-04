@@ -28,11 +28,18 @@ parser.add_argument('-inter', '--interface',
                         default=None,
                         type=int)
 
-parser.add_argument('-ports', '--ports',
-                        dest='ports',
+parser.add_argument('-mac', '--mac',
+                        dest='mac',
                         help='Optionally, if you want the mac address of all detected devices to be displayed',
                         default=None,
                         type=int)
+
+parser.add_argument('-ports', '--ports',
+                        dest='ports',
+                        help='Optionally, displays all open ports of the found devices',
+                        default=None,
+                        type=int)
+
 
 
 #T#ODO
@@ -76,6 +83,7 @@ while i < r:
     response = os.system(ping_const + hostname + " 1>/dev/null")
     if response == 0:
         print(hostname, 'is up!')
+        if 
         #break
     else:
         g = 0
