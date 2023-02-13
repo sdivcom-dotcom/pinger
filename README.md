@@ -9,7 +9,7 @@
  - -inter 1 
  - -inter_name "network interface" 
  - -mac 1 
- - -ports 1 
+ - -ports 1
  - -breaks 1 
  - -v 1
    
@@ -49,7 +49,9 @@ options:
    *-ports PORTS, --ports PORTS*
    
    Optionally, displays all open ports of the found devices
-   IMPORTANT!!! For now to run this function you need to run through sudo
+  IMPORTANT!!! For now to run this function you need to run it through sudo with -ports 2 flag 
+  You can scan all ports up to 11000 port without sudo and use -ports 1 flag.
+
    
    *-breaks BREAKS, --breaks BREAKS*
    

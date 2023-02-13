@@ -3,7 +3,7 @@ import subprocess
 import argparse
 import socket
 
-version_programm = "0.2"
+version_programm = "0.4"
 
 def get_network_interfaces():
     interfaces = []
@@ -19,8 +19,11 @@ print("network interfaces = " + network_interfaces)
 ping_const = "ping -c 1 -w 1 "
 parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a 192.168.1 -s 0 -ra 255 ' + network_interfaces)
 nmap = 'sudo nmap '
-mac_parser =' | grep "MAC Address:" | grep -oE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)"'
+netcat = 'nc -zvw3 '
+#mac_parser =' | grep "MAC Address:" | grep -oE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)"'
 inter_flag =' -I '
+ports_max = "10480"
+
 parser.add_argument('-a', '--adress_zone',
                         dest='a',
                         help='Enter the address without the last octet and period',
@@ -59,7 +62,7 @@ parser.add_argument('-mac', '--mac',
 
 parser.add_argument('-ports', '--ports',
                         dest='ports',
-                        help='Optionally, displays all open ports of the found devices IMPORTANT!!! For now to run this function you need to run through sudo',
+                        help='Optionally, displays all open ports of the found devices',
                         default=0,
                         type=int)
 
@@ -127,6 +130,8 @@ else:
 
 if ports == 1:
     ports_const = 1
+elif ports == 2:
+    ports_const = 2
 elif ports == 0:
     ports_const = 0
 else:
@@ -156,30 +161,60 @@ def get_mac_address(ip_address):
             mac_address = line.split()[2]
             return mac_address
 
+
+def netcat(ip_address):
+    i = 1
+    ports_max = 11000
+    netcat = 'nc -zvw3 '
+    a = i 
+    a = str(a)
+    ports_max = int(ports_max)
+    while i < ports_max:
+        a = str(a)
+        command = netcat + ip_address + " " + a  + " 2> /dev/null"
+        val = os.system(command)
+        if val == 0:
+            command2 = netcat + ip_address + " " + a  + " 1> /dev/null"
+            #print(command2)
+            value2 =  subprocess.check_output(command2,stderr=subprocess.STDOUT,shell=True)
+            value2 = str(value2)
+            x = value2.find("succeeded!")
+            #print(x)
+            if x > 46:
+                print("Port number found = " + a)
+            else:
+                pass
+        else:
+            pass
+        
+        a = int(a)
+        i = i + 1
+        a = a + 1
+
 r = int(r)
 while i < r:
     oktet = str(oktet)
     a = str(a)
     hostname = a + "." + oktet
     oktet = int(oktet)
-    response = os.system(ping + " " + hostname + " 1>/dev/null")
+    response = os.system(ping + " " + hostname + " 1 > /dev/null")
     if response == 0:
         print(hostname, 'is up!')
 
         if mac_const == 1:
-            # command1 = nmap + hostname + mac_parser
-            # response1 = subprocess.check_output(command1, shell=True)
-            # print(response1)
             response1 = get_mac_address(hostname)
             print("MAC address: " + response1)
-
         else:
             pass
 
         if ports_const == 1:
+            netcat(hostname)
+
+        elif ports_const == 2:
             command2 = nmap + hostname
             response2 = subprocess.check_output(command2, shell=True)
             print(response2)
+
         else:
             pass
 
