@@ -165,7 +165,6 @@ def get_mac_address(ip_address):
             print(mac_address)
             replace_mac = mac_address.replace(':', '-')
             url2 = url + replace_mac
-            url2 = url + replace_mac
             response = requests.get(url2) 
             print(response.text)
             return mac_address
