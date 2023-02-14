@@ -2,7 +2,9 @@ import os
 import subprocess
 import argparse
 import socket
+import requests
 
+url = 'https://api.macvendors.com/' 
 version_programm = "0.4"
 
 def get_network_interfaces():
@@ -155,10 +157,17 @@ else:
 def get_mac_address(ip_address):
     cmd = f"arp -n {ip_address}"
     output = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    print(output)
     lines = output.split("\n")
     for line in lines:
         if ip_address in line:
             mac_address = line.split()[2]
+            print(mac_address)
+            replace_mac = mac_address.replace(':', '-')
+            url2 = url + replace_mac
+            url2 = url + replace_mac
+            response = requests.get(url2) 
+            print(response.text)
             return mac_address
 
 
@@ -175,11 +184,9 @@ def netcat(ip_address):
         val = os.system(command)
         if val == 0:
             command2 = netcat + ip_address + " " + a  + " 1> /dev/null"
-            #print(command2)
             value2 =  subprocess.check_output(command2,stderr=subprocess.STDOUT,shell=True)
             value2 = str(value2)
             x = value2.find("succeeded!")
-            #print(x)
             if x > 46:
                 print("Port number found = " + a)
             else:
