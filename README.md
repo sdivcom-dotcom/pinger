@@ -2,7 +2,7 @@
 
 *A python script for pinging your assigned zone:*
 
- - sudo python3 main.py 
+ - python3 main.py 
  - -a 192.168.1 
  - -s 0 
  - -ra 255 
