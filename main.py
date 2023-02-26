@@ -4,8 +4,14 @@ import argparse
 import socket
 import requests
 
-url = 'https://api.macvendors.com/' 
-version_programm = "0.4"
+url = "https://api.macvendors.com/"
+version_programm = "0.5"
+nmap = 'sudo nmap '
+netcat = 'nc -zvw3 '
+inter_flag = ' -I '
+ports_max = "10480"
+ping_const = "ping -c 1 -w 1 "
+
 
 def get_network_interfaces():
     interfaces = []
@@ -14,71 +20,81 @@ def get_network_interfaces():
         interfaces.append(interface_name)
     return interfaces
 
+
 network_interfaces = get_network_interfaces()
 network_interfaces = str(network_interfaces)
 print("network interfaces = " + network_interfaces)
 
-ping_const = "ping -c 1 -w 1 "
-parser = argparse.ArgumentParser(description='Write ip addders without the last octet - example python3 main.py -a 192.168.1 -s 0 -ra 255 ' + network_interfaces)
-nmap = 'sudo nmap '
-netcat = 'nc -zvw3 '
-#mac_parser =' | grep "MAC Address:" | grep -oE "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2} \(.*\)"'
-inter_flag =' -I '
-ports_max = "10480"
+parser = argparse.ArgumentParser(description="Write ip addders \
+                                              without the last octet \
+                                              example python3 \
+                                              main.py \
+                                              -a 192.168.1 \
+                                              -s 0 \
+                                              -ra 255" + network_interfaces)
 
 parser.add_argument('-a', '--adress_zone',
-                        dest='a',
-                        help='Enter the address without the last octet and period',
-                        default="192.168.1",
-                        type=str)
+                    dest='a',
+                    help='Enter the address \
+                    without the last octet and period',
+                    default="192.168.1",
+                    type=str)
 
 parser.add_argument('-s', '--start_address',
-                        dest='s',
-                        help='Enter the address you want to start scanning',
-                        default=0,
-                        type=int)
+                    dest='s',
+                    help='Enter the address you \
+                    want to start scanning',
+                    default=0,
+                    type=int)
 
 parser.add_argument('-ra', '--range',
-                        dest='ra',
-                        help='Enter the last address to be scanned ',
-                        default=100,
-                        type=int)
+                    dest='ra',
+                    help='Enter the last address to be scanned ',
+                    default=12,
+                    type=int)
 
 parser.add_argument('-inter', '--interface',
-                        dest='inter',
-                        help='Optionally, if you want the scan to be on the specified interface only, specify 1 ' + network_interfaces,
-                        default=0,
-                        type=int)
+                    dest='inter',
+                    help='Optionally, if you want the scan to be on \
+                    the specified \
+                    interface only, specify 1 ' + network_interfaces,
+                    default=0,
+                    type=int)
 
 parser.add_argument('-inter_name', '--interface_name',
-                        dest='inter_name',
-                        help='Optionally, enter the interface from which you want to scan ' + network_interfaces,
-                        default='lo',
-                        type=str)
+                    dest='inter_name',
+                    help='Optionally, enter the interface \
+                    from which you \
+                    want to scan ' + network_interfaces,
+                    default='lo',
+                    type=str)
 
 parser.add_argument('-mac', '--mac',
-                        dest='mac',
-                        help='Optionally, if you want the mac address of all detected devices to be displayed',
-                        default=0,
-                        type=int)
+                    dest='mac',
+                    help='Optionally, if you want the mac address \
+                    of all detected devices to be displayed',
+                    default=0,
+                    type=int)
 
 parser.add_argument('-ports', '--ports',
-                        dest='ports',
-                        help='Optionally, displays all open ports of the found devices',
-                        default=0,
-                        type=int)
+                    dest='ports',
+                    help='Optionally, displays all open \
+                    ports of the found devices',
+                    default=0,
+                    type=int)
 
 parser.add_argument('-breaks', '--breaks',
-                        dest='breaks',
-                        help='Optionally, as soon as you want to stop at the first address you see',
-                        default=0,
-                        type=int)
+                    dest='breaks',
+                    help='Optionally, as soon as you want to \
+                    stop at the first address you see',
+                    default=0,
+                    type=int)
 
 parser.add_argument('-v', '--version',
-                        dest='version',
-                        help='Version programm',
-                        default=0,
-                        type=int)
+                    dest='version',
+                    help='Version programm',
+                    default=0,
+                    type=int)
 
 
 args = parser.parse_args()
@@ -92,15 +108,18 @@ ports = args.ports
 breaks = args.breaks
 version = args.version
 
-if (0 < ra < 255): 
+if 0 < ra < 255:
     r = ra
+    r = int(r)
 elif ra == 255:
     r = 255
+    r = int(r)
 else:
     print("Incorrect data")
     r = 255
+    r = int(r)
 
-if (0 < s < 255): 
+if 0 < s < 255:
     i = s
     oktet = s
 elif s == 0:
@@ -151,8 +170,10 @@ else:
 if version == 1:
     print("verion programm: " + version_programm)
     r = 0
+    r = int(r)
 else:
     pass
+
 
 def get_mac_address(ip_address):
     cmd = f"arp -n {ip_address}"
@@ -165,7 +186,7 @@ def get_mac_address(ip_address):
             print(mac_address)
             replace_mac = mac_address.replace(':', '-')
             url2 = url + replace_mac
-            response = requests.get(url2) 
+            response = requests.get(url2)
             print(response.text)
             return mac_address
 
@@ -174,36 +195,56 @@ def netcat(ip_address):
     i = 1
     ports_max = 11000
     netcat = 'nc -zvw3 '
-    a = i 
-    a = str(a)
+    port = i
+    port = str(port)
     ports_max = int(ports_max)
     while i < ports_max:
-        a = str(a)
-        command = netcat + ip_address + " " + a  + " 2> /dev/null"
+        port = str(port)
+        command = netcat + ip_address + " " + port + " 2> /dev/null"
         val = os.system(command)
         if val == 0:
-            command2 = netcat + ip_address + " " + a  + " 1> /dev/null"
-            value2 =  subprocess.check_output(command2,stderr=subprocess.STDOUT,shell=True)
+            command2 = netcat + ip_address + " " + port + " 1> /dev/null"
+            value2 = subprocess.check_output(command2,
+                                             stderr=subprocess.STDOUT,
+                                             shell=True)
             value2 = str(value2)
             x = value2.find("succeeded!")
             if x > 46:
-                print("Port number found = " + a)
+                print("Port number found = " + port)
             else:
                 pass
         else:
             pass
-        
-        a = int(a)
+        port = int(port)
         i = i + 1
-        a = a + 1
+        port = port + 1
 
-r = int(r)
+
+def netcat_wireguard(ip_address):
+    port = "51820"
+    netcat = 'nc -zvw3 '
+    command = netcat + ip_address + " " + port + " 2> /dev/null"
+    print(command)
+    val = os.system(command)
+    if val == 0:
+        command2 = netcat + ip_address + " " + port + " 1> /dev/null"
+        value2 = subprocess.check_output(command2,
+                                         stderr=subprocess.STDOUT,
+                                         shell=True)
+        value2 = str(value2)
+        x = value2.find("succeeded!")
+        if x > 46:
+            print("Port number found = " + port)
+        else:
+            pass
+
+
 while i < r:
     oktet = str(oktet)
     a = str(a)
     hostname = a + "." + oktet
     oktet = int(oktet)
-    response = os.system(ping + " " + hostname + " 1 > /dev/null")
+    response = os.system(ping + " " + hostname + " 1> /dev/null")
     if response == 0:
         print(hostname, 'is up!')
 
@@ -212,9 +253,9 @@ while i < r:
             print("MAC address: " + response1)
         else:
             pass
-
         if ports_const == 1:
             netcat(hostname)
+            netcat_wireguard(hostname)
 
         elif ports_const == 2:
             command2 = nmap + hostname
@@ -226,10 +267,11 @@ while i < r:
 
         if breaks_const == 1:
             break
+
         else:
             pass
-    
     else:
         pass
+
     i = i + 1
     oktet = oktet + 1
