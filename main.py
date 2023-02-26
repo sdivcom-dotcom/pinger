@@ -3,12 +3,11 @@ import socket
 import subprocess
 import argparse
 import socket
-import requests
+import urllib.request
 
 url = "https://api.macvendors.com/"
 version_programm = "0.5"
 nmap = 'sudo nmap '
-netcat = 'nc -zvw3 '
 inter_flag = ' -I '
 ports_max = "10480"
 ping_const = "ping -c 1 -w 1 "
@@ -187,8 +186,8 @@ def get_mac_address(ip_address):
             print(mac_address)
             replace_mac = mac_address.replace(':', '-')
             url2 = url + replace_mac
-            response = requests.get(url2)
-            print(response.text)
+            response = urllib.request.urlopen(url2)
+            print(response.read().decode('utf-8'))
             return mac_address
 
 
@@ -203,6 +202,7 @@ def netcat(ip_address):
 
 
 def netcat_wireguard(ip_address):
+    netcat = 'nc -zvw3 '
     port = "51820"
     netcat = 'nc -zvw3 '
     command = netcat + ip_address + " " + port + " 2> /dev/null"
