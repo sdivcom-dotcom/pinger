@@ -1,4 +1,5 @@
 import os
+import socket
 import subprocess
 import argparse
 import socket
@@ -192,39 +193,19 @@ def get_mac_address(ip_address):
 
 
 def netcat(ip_address):
-    i = 1
-    ports_max = 11000
-    netcat = 'nc -zvw3 '
-    port = i
-    port = str(port)
-    ports_max = int(ports_max)
-    while i < ports_max:
-        port = str(port)
-        command = netcat + ip_address + " " + port + " 2> /dev/null"
-        val = os.system(command)
-        if val == 0:
-            command2 = netcat + ip_address + " " + port + " 1> /dev/null"
-            value2 = subprocess.check_output(command2,
-                                             stderr=subprocess.STDOUT,
-                                             shell=True)
-            value2 = str(value2)
-            x = value2.find("succeeded!")
-            if x > 46:
-                print("Port number found = " + port)
-            else:
-                pass
-        else:
-            pass
-        port = int(port)
-        i = i + 1
-        port = port + 1
+    port_range = range(1, 65536)
+    for port in port_range:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(0.1)
+            result = s.connect_ex((ip_address, port))
+            if result == 0:
+                print(f"Port {port} open")
 
 
 def netcat_wireguard(ip_address):
     port = "51820"
     netcat = 'nc -zvw3 '
     command = netcat + ip_address + " " + port + " 2> /dev/null"
-    print(command)
     val = os.system(command)
     if val == 0:
         command2 = netcat + ip_address + " " + port + " 1> /dev/null"
