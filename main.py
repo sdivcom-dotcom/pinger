@@ -219,6 +219,17 @@ def netcat_wireguard(ip_address):
         else:
             pass
 
+def http_https(ip_address):
+    try:
+        urllib.request.urlopen("http://" + ip_address)
+        print("Website", ip_address, "is available over http.")
+    except:
+        print("Website", ip_address, "is not available over http.")
+    try:
+        urllib.request.urlopen("https://" + ip_address)
+        print("Website", ip_address, "is available over https.")
+    except:
+        print("Website", ip_address, "is not available over https.")
 
 while i < r:
     oktet = str(oktet)
@@ -237,11 +248,14 @@ while i < r:
         if ports_const == 1:
             netcat(hostname)
             netcat_wireguard(hostname)
+            http_https(hostname)
 
         elif ports_const == 2:
             command2 = nmap + hostname
             response2 = subprocess.check_output(command2, shell=True)
             print(response2)
+            http_https(hostname)
+            
 
         else:
             pass
