@@ -62,16 +62,12 @@ options:
    Version programm
    
    TODO
-Add a multi-threaded ping feature, so that the utility can handle multiple requests simultaneously and speed up the monitoring process.
+    Add the ability to customize the interval between pings and response time, so that you can configure the utility for your specific needs.
 
-Implement different ping methods (ICMP, TCP, HTTP, etc.) for more accurate monitoring.
+    Add the ability to save ping results to a file or database so that you can analyze historical data on host availability.
 
-Add the ability to customize the interval between pings and response time, so that you can configure the utility for your specific needs.
+    Add the ability to send notifications via email or messengers when host availability changes.
 
-Add the ability to save ping results to a file or database so that you can analyze historical data on host availability.
+    Implement the ability to monitor not only hosts, but also network devices (such as routers).
 
-Add the ability to send notifications via email or messengers when host availability changes.
-
-Implement the ability to monitor not only hosts, but also network devices (such as routers).
-
-Add support for configuration files so that you can configure the utility without changing the source code.
+    Add support for configuration files so that you can configure the utility without changing the source code.

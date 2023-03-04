@@ -1,3 +1,3 @@
 #!/bin/bash
-pycodestyle main.py
-pycodestyle main.py | wc -l
+pycodestyle oldmain.py
+pycodestyle oldmain.py | wc -l
